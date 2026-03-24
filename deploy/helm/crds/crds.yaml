@@ -2303,6 +2303,10 @@ spec:
                           type: string
                         type: array
                     type: object
+                  extra:
+                    description: Extra contains raw AppArmor rules to inject
+                      into the profile (e.g. deny rules).
+                    type: string
                   executable:
                     description: Executable rules for allowed executables.
                     properties:

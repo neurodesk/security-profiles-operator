@@ -82,6 +82,8 @@ type AppArmorAbstract struct {
 	Network *AppArmorNetworkRules `json:"network,omitempty"`
 	// Capability rules for Linux capabilities.
 	Capability *AppArmorCapabilityRules `json:"capability,omitempty"`
+	// Extra contains raw AppArmor rules to inject into the profile (e.g. deny rules).
+	Extra string `json:"extra,omitempty"`
 }
 
 // AppArmorProfileSpec defines the desired state of AppArmorProfile.

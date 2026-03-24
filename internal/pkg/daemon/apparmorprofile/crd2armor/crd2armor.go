@@ -79,7 +79,9 @@ profile {{.Name}} flags=({{.ProfileMode}},attach_disconnected,mediate_deleted) {
   umount,
   {{end}}
 
-  # Raw rules placeholder
+  # Extra raw rules
+{{ if ne .Abstract.Extra ""}}{{.Abstract.Extra}}
+{{end}}
 
   # Add default deny for known information leak/priv esc paths
 {{ if not .ComplainMode }}
