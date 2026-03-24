@@ -203,8 +203,7 @@ jobs:
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
           images: |
-            quay.io/security-profiles-operator/spo
-            ghcr.io/neurodesk/security-profiles-operator
+            ${{ github.ref == 'refs/heads/neurodesk' && 'ghcr.io/neurodesk/security-profiles-operator' || 'quay.io/security-profiles-operator/spo' }}
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/neurodesk' }}
             type=ref,event=branch
