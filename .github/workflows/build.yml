@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - neurodesk
   release:
     types: [published]
   pull_request:
@@ -175,6 +176,9 @@ jobs:
 
   operator-image:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Set up Docker Buildx
@@ -187,25 +191,35 @@ jobs:
           username: security-profiles-operator+github
           password: ${{ secrets.QUAY_TOKEN }}
         if: github.ref == 'refs/heads/main'
+      - name: Login to GHCR
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        if: github.ref == 'refs/heads/neurodesk'
       - name: Image metadata
         id: meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
           images: |
             quay.io/security-profiles-operator/spo
+            ghcr.io/neurodesk/security-profiles-operator
           tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/neurodesk' }}
             type=ref,event=branch
             type=ref,event=pr
             type=ref,event=tag
             type=sha,format=long
-      - name: Build
+      - name: Build and push
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           context: .
           file: Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          load: true
+          push: ${{ github.ref == 'refs/heads/neurodesk' }}
+          load: ${{ github.ref != 'refs/heads/neurodesk' }}
 
   ubi-image:
     runs-on: ubuntu-24.04
