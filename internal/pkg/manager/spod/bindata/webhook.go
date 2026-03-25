@@ -176,7 +176,7 @@ func GetWebhook(
 	switch caInjectType {
 	case CAInjectTypeCertManager:
 		cfg.Annotations = map[string]string{
-			"cert-manager.io/inject-ca-from": config.OperatorName + "/webhook-cert",
+			"cert-manager.io/inject-ca-from": namespace + "/webhook-cert",
 		}
 	case CAInjectTypeOpenShift:
 		// if there's any OCP specific webhook opts, apply them here
